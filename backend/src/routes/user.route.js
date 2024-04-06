@@ -3,6 +3,8 @@ const {
   loginUser,
   logoutUser,
   registerUser,
+  getUser,
+  updateUserCategories,
 } = require("../controllers/user.controller.js");
 const verifyJWT = require("../middlewares/auth.middleware.js");
 
@@ -159,6 +161,8 @@ router.route("/login").post(loginUser);
  */
 
 //secured routes
+router.route("/get-user").get(verifyJWT, getUser);
+router.route("/update-user-categories").patch(verifyJWT, updateUserCategories);
 router.route("/logout").post(verifyJWT, logoutUser);
 
 module.exports = router;

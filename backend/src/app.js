@@ -7,6 +7,10 @@ const cors = require("cors");
 const xss = require("xss-clean");
 const hpp = require("hpp");
 const { specs, swaggerUi } = require("./middlewares/swagger.middleware");
+
+const authRoutes = require("./routes/user.route");
+const categoryRoutes = require("./routes/category.route");
+
 const app = express();
 
 //Enable CORS
@@ -38,12 +42,11 @@ app.use(express.urlencoded({ extended: false }));
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
 
 // Routes
-// const authRoutes = require("./routes/user.route");
 // const dataRoutes = require("./routes/data.route");
 // const secureRoutes = require("./routes/protected.route");
 
-// app.use("/api/v1/auth", authRoutes);
-// app.use("/api/v1/data", dataRoutes);
+app.use("/api/v1/auth", authRoutes);
+app.use("/api/v1/category", categoryRoutes);
 // app.use("/api/v1/secure", secureRoutes);
 
 module.exports = app;

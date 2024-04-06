@@ -36,7 +36,7 @@ const registerUser = asyncHandler(async (req, res) => {
     throw new ApiError(500, "Something went wrong while registering the user");
   }
 
-  return res.status(201).json({ user: createdUser });
+  return res.status(201).json({ user });
 });
 
 const loginUser = asyncHandler(async (req, res) => {
@@ -81,6 +81,10 @@ const loginUser = asyncHandler(async (req, res) => {
   });
 });
 
+const getUser = asyncHandler(async (req, res) => {
+  return res.json({ user: req.user });
+});
+
 const logoutUser = asyncHandler(async (req, res) => {
   const options = {
     httpOnly: true,
@@ -94,4 +98,53 @@ const logoutUser = asyncHandler(async (req, res) => {
     .json({ message: "User logged Out" });
 });
 
-module.exports = { registerUser, loginUser, logoutUser };
+const updateUserCategories = asyncHandler(async (req, res) => {
+  const { catId } = req.body;
+  const { id } = req.user;
+
+  const user = await User.findOne({
+    where: {
+      id,
+    },
+  });
+
+  let categories_id = user?.dataValues?.categories_id;
+
+  if (categories_id) {
+    if (categories_id[catId]) {
+      delete categories_id[catId];
+    } else {
+      categories_id = {
+        ...categories_id,
+        [catId]: true,
+      };
+    }
+  } else {
+    categories_id = {
+      [catId]: true,
+    };
+  }
+
+  await User.update(
+    { categories_id: categories_id },
+    {
+      where: {
+        id,
+      },
+      returning: true,
+      plain: true,
+    }
+  );
+  return res.json({
+    success: true,
+    message: "User categories updated successfully.",
+  });
+});
+
+module.exports = {
+  registerUser,
+  loginUser,
+  logoutUser,
+  getUser,
+  updateUserCategories,
+};
