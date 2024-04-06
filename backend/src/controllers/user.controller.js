@@ -3,6 +3,7 @@ const ApiError = require("../utils/ApiError.js");
 const User = require("../models/user.model.js");
 const { hashPassword, comparePassword } = require("../utils/passwordUtils.js");
 const generateAccessToken = require("../utils/generateAccessToken.js");
+const sendMail = require("../utils/sendMail.js");
 
 const registerUser = asyncHandler(async (req, res) => {
   const { name, email, password } = req.body;
@@ -35,7 +36,7 @@ const registerUser = asyncHandler(async (req, res) => {
   if (!user.dataValues) {
     throw new ApiError(500, "Something went wrong while registering the user");
   }
-
+  sendMail(email, `Your Email Verification code is 12345678`, "Verify Email");
   return res.status(201).json({ user });
 });
 
