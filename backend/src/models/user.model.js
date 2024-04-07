@@ -21,6 +21,8 @@ User.init(
     },
     categories_id: {
       type: DataTypes.JSON,
+      allowNull: true,
+      defaultValue: {},
     },
   },
   {

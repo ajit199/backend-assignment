@@ -1,5 +1,8 @@
 import React, { useState } from "react";
 import "./Login.css";
+import { postData } from "../../utils/api";
+import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -7,7 +10,7 @@ const Login = () => {
     email: "",
     password: "",
   });
-
+  const navigate = useNavigate();
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
@@ -22,8 +25,15 @@ const Login = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Handle form submission here
-    console.log(formData);
+    postData(`auth/login`, formData)
+      .then((data) => {
+        Cookies.set("accessToken", data.accessToken);
+        alert("Login successful.");
+        navigate("/categories");
+      })
+      .catch((error) => {
+        console.log("error", error);
+      });
   };
 
   return (

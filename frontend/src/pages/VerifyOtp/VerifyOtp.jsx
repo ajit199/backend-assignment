@@ -1,22 +1,32 @@
 import React, { useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+
 import "./VerifyOtp.css";
 
 const VerifyOtp = () => {
   const [code, setCode] = useState("");
+  const location = useLocation();
+  const navigate = useNavigate();
+  // Extract email from URL parameters
+  const email = new URLSearchParams(location.search).get("email");
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Handle form submission here
-    console.log(code);
+
+    alert("Your email has been verified.");
+    navigate("/login");
   };
+
+  if (!email) {
+    return navigate("/");
+  }
 
   return (
     <>
       <div className="code-form-container">
         <form onSubmit={handleSubmit} className="code-form">
           <h2>Verify your email</h2>
-          <p>
-            Enter the 8 digit code you have received on ajitca.1999@gmail.com
-          </p>
+          <p>Enter the 8 digit code you have received on {email}</p>
           <div className="form-group">
             <label htmlFor="code">Code</label>
             <input

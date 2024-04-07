@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import "./Register.css";
-
+import { postData } from "../../utils/api";
+import { useNavigate } from "react-router-dom";
 const Register = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -18,8 +20,14 @@ const Register = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Handle form submission here
-    console.log(formData);
+
+    postData(`auth/register`, formData)
+      .then((data) => {
+        navigate(`/verify-otp?email=${formData.email}`);
+      })
+      .catch((error) => {
+        console.log("error", error);
+      });
   };
 
   return (
