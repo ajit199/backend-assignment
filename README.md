@@ -11,7 +11,7 @@ The backend of the application is built using Express.js framework and Sequelize
 - **JWT Token Authentication:** Implemented JWT (JSON Web Tokens) for user authentication, providing secure access to protected routes.
 - **Models:** Includes user and category models. User model stores category IDs for reference.
 - **Nodemailer:** Used for sending static emails, particularly for sending OTPs.
-
+- **Deployment:** Used [Render.com](https://render.com/) for deployment. They will automatically spin down instances with inactivity, which can delay requests by 50 seconds or more. So api's can take some extra time to respond.
 ## Frontend
 
 The frontend of the application is developed using React.js and utilizes react-router-dom for routing. Here are some key features of the frontend:
