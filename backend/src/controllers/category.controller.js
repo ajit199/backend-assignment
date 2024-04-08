@@ -31,6 +31,10 @@ const getCategories = asyncHandler(async (req, res) => {
   });
 });
 
+const getUserCategories = asyncHandler(async (req, res) => {
+  return res.json({ data: req.user?.categories_id });
+});
+
 const updateUserCategories = asyncHandler(async (req, res) => {
   const { catId } = req.body;
   const { id } = req.user;
@@ -74,4 +78,4 @@ const updateUserCategories = asyncHandler(async (req, res) => {
   });
 });
 
-module.exports = { getCategories, updateUserCategories };
+module.exports = { getCategories, getUserCategories, updateUserCategories };

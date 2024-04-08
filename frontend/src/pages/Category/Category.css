@@ -6,10 +6,11 @@
 }
 
 .category {
-  width: 350px;
+  width: 500px;
   padding: 20px;
   border: 2px solid #f4f4f4;
   border-radius: 10px;
+  text-align: center;
 }
 
 .category h2,
@@ -25,6 +26,7 @@
 .cat-form-group {
   display: flex;
   align-items: center;
+  /* justify-content: center; */
   gap: 7px;
   margin-bottom: 15px;
 }

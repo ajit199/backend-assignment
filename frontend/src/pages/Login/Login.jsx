@@ -1,15 +1,31 @@
-import React, { useState } from "react";
-import "./Login.css";
+import React, { useState, useContext } from "react";
 import { postData } from "../../utils/api";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import Cookies from "js-cookie";
+import { Oval } from "react-loader-spinner";
+import { UserContext } from "../../context/UserContext";
+import "./Login.css";
 
 const Login = () => {
+  const { setUserToken } = useContext(UserContext);
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
+  const [isLoading, setIsLoading] = useState(false);
+
+  const spinner = (
+    <Oval
+      visible={isLoading}
+      height="25"
+      width="25"
+      color="white"
+      ariaLabel="oval-loading"
+      wrapperStyle={{}}
+      wrapperClass=""
+    />
+  );
   const navigate = useNavigate();
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -25,13 +41,18 @@ const Login = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setIsLoading(true);
     postData(`auth/login`, formData)
       .then((data) => {
-        Cookies.set("accessToken", data.accessToken);
-        alert("Login successful.");
-        navigate("/categories");
+        Cookies.set("accessToken", data?.accessToken);
+        setUserToken(data?.accessToken);
+        setIsLoading(false);
+        setTimeout(() => {
+          navigate("/categories");
+        }, 500);
       })
       .catch((error) => {
+        setIsLoading(false);
         console.log("error", error);
       });
   };
@@ -77,12 +98,11 @@ const Login = () => {
             </div>
           </div>
           <button type="submit" className="login-btn">
-            LOGIN
+            {isLoading ? spinner : "LOGIN"}
           </button>
           <div className="register-page-link">
             <span>
-              Have an account?{" "}
-              <a href="https://www.google.com">&nbsp; SIGN UP</a>
+              Have an account? <Link to="/">&nbsp; SIGN UP</Link>
             </span>
           </div>
         </form>

@@ -55,7 +55,7 @@ const loginUser = asyncHandler(async (req, res) => {
   });
 
   // check if user exists.
-  if (!user.dataValues?.id) {
+  if (!user?.dataValues?.id) {
     throw new ApiError(404, "User does not exists.");
   }
 
@@ -71,37 +71,12 @@ const loginUser = asyncHandler(async (req, res) => {
 
   const { accessToken } = await generateAccessToken(user);
 
-  const options = {
-    httpOnly: true,
-    secure: true,
-  };
-
-  // set access token in the cookie.
-  return res.status(200).cookie("accessToken", accessToken, options).json({
+  return res.json({
     accessToken,
   });
-});
-
-const getUserCategories = asyncHandler(async (req, res) => {
-  return res.json({ data: req.user?.categories_id });
-});
-
-const logoutUser = asyncHandler(async (req, res) => {
-  const options = {
-    httpOnly: true,
-    secure: true,
-  };
-
-  // unset access token in the cookie.
-  return res
-    .status(200)
-    .clearCookie("accessToken", options)
-    .json({ message: "User logged Out" });
 });
 
 module.exports = {
   registerUser,
   loginUser,
-  logoutUser,
-  getUserCategories,
 };

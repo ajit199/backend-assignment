@@ -4,11 +4,16 @@ import Category from "./pages/Category/Category";
 import Register from "./pages/Register/Register";
 import Login from "./pages/Login/Login";
 import VerifyOtp from "./pages/VerifyOtp/VerifyOtp";
+import Home from "./pages/Home/Home";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 const router = createBrowserRouter([
   {
     path: "/",
+    element: <Home />,
+  },
+  {
+    path: "/register",
     element: <Register />,
   },
   {

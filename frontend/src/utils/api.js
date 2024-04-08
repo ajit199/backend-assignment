@@ -1,13 +1,10 @@
-import axios from "axios";
+import axiosInstance from "./axios";
 import Cookies from "js-cookie";
 
-const Base_Url = process.env.REACT_APP_API_URL;
-
 async function getData(url) {
-  const accessToken = Cookies.get("accessToken");
-  const response = await axios.get(`${Base_Url}${url}`, {
+  const response = await axiosInstance.get(`${url}`, {
     headers: {
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: `Bearer ${Cookies.get("accessToken")}`,
     },
   });
   const data = response.data;
@@ -15,10 +12,9 @@ async function getData(url) {
 }
 
 async function postData(url, data) {
-  const accessToken = Cookies.get("accessToken");
-  const response = await axios.post(`${Base_Url}${url}`, data, {
+  const response = await axiosInstance.post(`${url}`, data, {
     headers: {
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: `Bearer ${Cookies.get("accessToken")}`,
     },
   });
   const resData = response.data;
@@ -26,10 +22,9 @@ async function postData(url, data) {
 }
 
 async function patchData(url, data) {
-  const accessToken = Cookies.get("accessToken");
-  const response = await axios.patch(`${Base_Url}${url}`, data, {
+  const response = await axiosInstance.patch(`${url}`, data, {
     headers: {
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: `Bearer ${Cookies.get("accessToken")}`,
     },
   });
   const resData = response.data;

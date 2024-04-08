@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import "./Register.css";
 import { postData } from "../../utils/api";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+import { Oval } from "react-loader-spinner";
 const Register = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -9,6 +10,20 @@ const Register = () => {
     email: "",
     password: "",
   });
+
+  const [isLoading, setIsLoading] = useState(false);
+
+  const spinner = (
+    <Oval
+      visible={isLoading}
+      height="25"
+      width="25"
+      color="white"
+      ariaLabel="oval-loading"
+      wrapperStyle={{}}
+      wrapperClass=""
+    />
+  );
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -20,12 +35,14 @@ const Register = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
+    setIsLoading(true);
     postData(`auth/register`, formData)
       .then((data) => {
+        setIsLoading(false);
         navigate(`/verify-otp?email=${formData.email}`);
       })
       .catch((error) => {
+        setIsLoading(false);
         console.log("error", error);
       });
   };
@@ -72,11 +89,11 @@ const Register = () => {
             />
           </div>
           <button type="submit" className="create-account-btn">
-            Create Account
+            {isLoading ? spinner : "Create Account"}
           </button>
           <div className="login-page-link">
             <span>
-              Have an account? <a href="https://www.google.com">&nbsp; LOGIN</a>
+              Have an account? <Link to="/login">&nbsp; LOGIN</Link>
             </span>
           </div>
         </form>

@@ -49,43 +49,9 @@
   margin-right: 10px;
 }
 
-/* @media screen and (max-width: 768px) {
-  .navbar {
-    flex-direction: column;
-    padding: 10px;
-  }
-
-  .navbar-left,
-  .navbar-center,
-  .navbar-right {
-    width: 100%;
-    margin-bottom: 10px;
-    text-align: center;
-  }
-
-  .navbar-nav {
-    justify-content: center;
-  }
-
-  .navbar-right {
-    justify-content: center;
-    flex-direction: column;
-  }
-
-  .navbar-nav,
-  .navbar-right {
-    flex-wrap: wrap;
-  }
-
-  .nav-item {
-    margin: 0 10px;
-  }
-} */
-
 .navbar-right > div {
   display: flex;
-  justify-content: flex-end;
-  align-items: flex-end;
+  column-gap: 50px;
 }
 
 .offers {

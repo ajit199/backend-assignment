@@ -12,7 +12,6 @@ const VerifyOtp = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
     alert("Your email has been verified.");
     navigate("/login");
   };

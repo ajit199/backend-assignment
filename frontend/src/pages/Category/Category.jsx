@@ -1,16 +1,36 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import ReactPaginate from "react-paginate";
-import "./Category.css";
 import { getData, patchData } from "../../utils/api";
+import Cookies from "js-cookie";
+import { useNavigate } from "react-router-dom";
+import { Oval } from "react-loader-spinner";
+import { UserContext } from "../../context/UserContext";
+import "./Category.css";
 
 function Category() {
   const [categories, setCategories] = useState([]);
   const [selectedCategories, setSelectedCategories] = useState({});
   const [totalCategories, setTotalCategories] = useState(0);
   const [currentPage, setCurrentPage] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
+  const { userToken } = useContext(UserContext);
   const catsPerPage = 6;
-  // const [filterData, setFilterData] = useState([]);
-  // Fetch categories and user selections from backend
+  const navigate = useNavigate();
+
+  const spinner = (
+    <Oval
+      visible={isLoading}
+      height="50"
+      width="50"
+      color="blue"
+      strokeWidth={4}
+      ariaLabel="oval-loading"
+      wrapperStyle={{
+        border: "none",
+      }}
+      wrapperClass=""
+    />
+  );
 
   function getCategories() {
     getData(
@@ -28,33 +48,47 @@ function Category() {
   }
 
   function getSelectedCategories() {
+    setIsLoading(true);
     getData(`auth/get-user-categories`)
       .then((data) => {
+        setIsLoading(false);
         setSelectedCategories(data?.data);
       })
       .catch((error) => {
+        setIsLoading(false);
         console.log("error", error);
       });
   }
 
   useEffect(() => {
-    getCategories();
+    if (userToken) {
+      getCategories();
+    }
   }, [currentPage]);
 
   useEffect(() => {
-    getSelectedCategories();
+    if (userToken) {
+      getSelectedCategories();
+    } else {
+      navigate("/login");
+    }
   }, []);
 
   // Function to save category selections to backend
   const updateUserCategories = (catId) => {
+    setIsLoading(true);
     patchData(`category/update-user-categories`, {
       catId,
     })
       .then((data) => {
+        setIsLoading(false);
         getCategories();
         getSelectedCategories();
       })
-      .catch((error) => console.error("err", error));
+      .catch((error) => {
+        setIsLoading(false);
+        console.error("err", error);
+      });
   };
 
   const handlePageClick = (e) => {
@@ -68,18 +102,24 @@ function Category() {
         <h2>Please mark your interests!</h2>
         <p>We will keep you notified</p>
         <h3>My saved interests!</h3>
-        {categories.map((category) => {
-          return (
-            <div key={category?.id} className="cat-form-group">
-              <input
-                type="checkbox"
-                checked={selectedCategories[category.id] ? true : false}
-                onChange={() => updateUserCategories(category.id)}
-              />
-              <label>{category.name}</label>
-            </div>
-          );
-        })}
+        {isLoading ? (
+          <div style={{ display: "flex", justifyContent: "center" }}>
+            {spinner}
+          </div>
+        ) : (
+          categories.map((category) => {
+            return (
+              <div key={category?.id} className="cat-form-group">
+                <input
+                  type="checkbox"
+                  checked={selectedCategories[category.id] ? true : false}
+                  onChange={() => updateUserCategories(category.id)}
+                />
+                <label>{category.name}</label>
+              </div>
+            );
+          })
+        )}
         <ReactPaginate
           previousLabel={"prev"}
           nextLabel={"next"}
@@ -89,7 +129,6 @@ function Category() {
           subContainerClassName={"pages pagination"}
           activeClassName={"active"}
           onPageChange={handlePageClick}
-          pageRangeDisplayed={5}
           pageCount={Math.ceil(totalCategories / catsPerPage)}
           renderOnZeroPageCount={null}
         />

@@ -1,8 +1,15 @@
-import React from "react";
+import React, { useContext } from "react";
 import { FaSearch, FaShoppingCart } from "react-icons/fa";
-import "./Header.css"; // Import CSS for styling
-
+import { UserContext } from "../../context/UserContext";
+import Cookies from "js-cookie";
+import "./Header.css";
 const Header = () => {
+  const { userToken, setUserToken } = useContext(UserContext);
+  function handleLogout() {
+    Cookies.remove("accessToken");
+    setUserToken(null);
+    window.location.href = window.location.origin;
+  }
   return (
     <>
       <nav className="navbar">
@@ -22,7 +29,17 @@ const Header = () => {
           <ul className="navbar-nav">
             <li className="nav-item">Help</li>
             <li className="nav-item">Order & Returns</li>
-            <li className="nav-item">Hi, John</li>
+            {userToken ? (
+              <li
+                style={{ cursor: "pointer" }}
+                onClick={handleLogout}
+                className="nav-item"
+              >
+                Logout
+              </li>
+            ) : (
+              ""
+            )}
           </ul>
           <div>
             <div className="nav-seach-icon">
