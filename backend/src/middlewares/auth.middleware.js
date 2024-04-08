@@ -6,7 +6,6 @@ const User = require("../models/user.model.js");
 const verifyJWT = asyncHandler(async (req, _, next) => {
   try {
     const token = req.header("Authorization")?.replace("Bearer ", "");
-    console.log("token", typeof token);
     if (!token || token == "undefined") {
       throw new ApiError(401, "Unauthorized request");
     }

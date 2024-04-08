@@ -47,9 +47,9 @@ function Category() {
       });
   }
 
-  function getSelectedCategories() {
+  function getUserCategories() {
     setIsLoading(true);
-    getData(`auth/get-user-categories`)
+    getData(`category/get-user-categories`)
       .then((data) => {
         setIsLoading(false);
         setSelectedCategories(data?.data);
@@ -68,7 +68,7 @@ function Category() {
 
   useEffect(() => {
     if (userToken) {
-      getSelectedCategories();
+      getUserCategories();
     } else {
       navigate("/login");
     }
@@ -83,7 +83,7 @@ function Category() {
       .then((data) => {
         setIsLoading(false);
         getCategories();
-        getSelectedCategories();
+        getUserCategories();
       })
       .catch((error) => {
         setIsLoading(false);
